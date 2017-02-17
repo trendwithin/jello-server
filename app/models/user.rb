@@ -1,0 +1,12 @@
+class User < ApplicationRecord
+  has_secure_password
+
+  has_many :boards, foreign_key: 'creator_id', dependent: :nullify
+  has_many :lists, foreign_key: 'creator_id', dependent: :nullify
+  has_many :cards, foreign_key: 'creator_id', dependent: :nullify
+  has_many :comments, foreign_key: 'creator_id', dependent: :nullify
+  has_many :assigned_cards, dependent: :nullify,
+           class_name: 'Card', foreign_key: 'assignee_id'
+
+  validates :email, presence: true, uniqueness: true
+end
