@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include Gravatar
+
   has_secure_password
 
   has_many :boards, foreign_key: 'creator_id', dependent: :nullify
