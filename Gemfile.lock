@@ -73,6 +73,7 @@ GEM
     pg (0.19.0)
     puma (3.7.0)
     rack (2.0.1)
+    rack-cors (0.4.1)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.0.1)
@@ -134,6 +135,7 @@ DEPENDENCIES
   minitest-rg
   pg (~> 0.18)
   puma (~> 3.0)
+  rack-cors
   rails (~> 5.0.1)
   spring
   spring-watcher-listen (~> 2.0.0)
