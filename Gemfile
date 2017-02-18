@@ -29,6 +29,7 @@ end
 group :test do
   gem 'minitest', '~> 5.10'
   gem 'minitest-rg'
+  gem 'minitest-rails'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

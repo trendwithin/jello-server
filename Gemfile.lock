@@ -77,6 +77,9 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
     minitest (5.10.1)
+    minitest-rails (3.0.0)
+      minitest (~> 5.8)
+      railties (~> 5.0)
     minitest-rg (5.2.0)
       minitest (~> 5.0)
     nio4r (1.2.1)
@@ -145,6 +148,7 @@ DEPENDENCIES
   dotenv-rails
   listen (~> 3.0.5)
   minitest (~> 5.10)
+  minitest-rails
   minitest-rg
   pg (~> 0.18)
   puma (~> 3.0)
