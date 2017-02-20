@@ -5,6 +5,18 @@ describe UsersController do
   end
 
   describe 'GET /users' do
+    it 'should successfully fetch all Users' do
+      @expected_users = User.all
+
+      get users_url, as: :json
+      assert_response :ok
+
+      response_users = json_response['users']
+      assert_instance_of Array, response_users
+
+      response_ids = response_users.map { |u| u['id'] }
+      assert_equal @expected_users.ids.sort, response_ids.sort
+    end
   end
 
   describe 'GET /users/:id' do
