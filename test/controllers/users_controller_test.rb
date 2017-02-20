@@ -41,6 +41,20 @@ describe UsersController do
       assert_equal archived_board_ids.sort,
                    response_archived_boards.map { |b| b['id'] }.sort
     end
+
+    describe 'when :id is unknown' do
+      it 'should respond with :not_found' do
+        get user_url(id: 'jim')
+        assert_response :not_found
+
+        response_error = json_response['error']
+        refute_nil response_error
+
+        assert_equal 404, response_error['status']
+        assert_equal 'Not found', response_error['name']
+        refute_nil response_error['message']
+      end
+    end
   end
 
   describe 'POST /users' do
