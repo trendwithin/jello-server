@@ -11,6 +11,7 @@ describe UsersController do
 
       get users_url, as: :json
       assert_response :ok
+      assert_equal 'application/json', response.content_type
 
       response_users = json_response['users']
       assert_instance_of Array, response_users
@@ -22,7 +23,7 @@ describe UsersController do
 
   describe 'GET /users/:id' do
     it 'should successfully fetch the requested User' do
-      get user_url(@user)
+      get user_url(@user), as: :json
       assert_response :ok
 
       response_user = json_response['user']
@@ -44,7 +45,7 @@ describe UsersController do
 
     describe 'when :id is unknown' do
       it 'should respond with :not_found' do
-        get user_url(id: 'jim')
+        get user_url(id: 'jim'), as: :json
         assert_response :not_found
 
         response_error = json_response['error']
