@@ -30,7 +30,7 @@ describe UsersController do
       assert_equal @user.email, response_user['email']
       assert_equal @user.gravatar_url, response_user['gravatar_url']
 
-      assert_equal user_url(@user), response_user['links'][0]['href']
+      assert_equal user_url(@user), response_user.dig('links', 0, 'href')
 
       board_ids = @user.boards.where(archived: [false, nil]).pluck(:id)
       response_boards = response_user['boards']
@@ -58,6 +58,29 @@ describe UsersController do
   end
 
   describe 'POST /users' do
+    it 'should create and respond with a new User' do
+      user_attributes = {
+        email: 'jim@example.com',
+        password: 'secret',
+        password_confirmation: 'secret'
+      }
+
+      assert_difference('User.count') do
+        post users_url, params: { user: user_attributes }, as: :json
+      end
+
+      assert_response :created
+
+      response_user = json_response['user']
+      assert_equal user_attributes[:email], response_user['email']
+      refute_nil response_user['gravatar_url']
+
+      user = User.find(response_user['id'])
+      assert_equal user_url(user), response_user.dig('links', 0, 'href')
+
+      assert_empty response_user['boards']
+      assert_empty response_user['archived_boards']
+    end
   end
 
   describe 'PATCH /users/:id' do
