@@ -3,6 +3,8 @@ class User < ApplicationRecord
 
   has_secure_password
 
+  paginates_per 10
+
   has_many :boards, foreign_key: 'creator_id', dependent: :nullify
   has_many :lists, foreign_key: 'creator_id', dependent: :nullify
   has_many :cards, foreign_key: 'creator_id', dependent: :nullify
@@ -11,4 +13,6 @@ class User < ApplicationRecord
            class_name: 'Card', foreign_key: 'assignee_id'
 
   validates :email, presence: true, uniqueness: true
+
+  default_scope { order(:created_at) }
 end

@@ -3,9 +3,10 @@ class V2::UsersController < ApplicationController
 
   # GET /v2/users
   def index
-    @users = User.all
+    page = params[:page] || 1
+    @users = User.page(page)
     if stale?(@users)
-      render json: @users
+      render json: @users, meta: pagination_meta(@users)
     end
   end
 

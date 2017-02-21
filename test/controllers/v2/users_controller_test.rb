@@ -3,21 +3,52 @@ require 'test_helper'
 describe V2::UsersController do
   before do
     @user = users(:admin)
+    @per_page = 3
   end
 
   describe 'GET /v2/users' do
-    it 'should successfully fetch all Users' do
-      @expected_users = User.all
+    it 'should successfully fetch the first page of Users' do
+      page = 1
+      User.stub(:default_per_page, @per_page) do
+        @expected_users = User.page(page)
+        get v2_users_url, as: :json
+      end
 
-      get v2_users_url, as: :json
       assert_response :ok
       assert_equal 'application/json', response.content_type
 
       response_users = json_response['users']
       assert_instance_of Array, response_users
+      assert_equal @per_page, response_users.count
 
       response_ids = response_users.map { |u| u['id'] }
       assert_equal @expected_users.ids.sort, response_ids.sort
+
+      user_count = User.count
+      response_meta = json_response.dig('meta')
+      assert_equal page, response_meta['current_page']
+      assert_equal page+1, response_meta['next_page']
+      assert_nil response_meta['prev_page']
+      assert_equal user_count, response_meta['total_count']
+      assert_equal (user_count.to_f / @per_page.to_f).ceil,
+                   response_meta['total_pages']
+    end
+
+    it 'should paginate the fetched Users' do
+      page = 3
+      User.stub(:default_per_page, @per_page) do
+        @expected_users = User.page(page)
+        get v2_users_url(page: page), as: :json
+      end
+
+      response_users = json_response['users']
+      response_ids = response_users.map { |u| u['id'] }
+      assert_equal @expected_users.ids.sort, response_ids.sort
+
+      response_meta = json_response.dig('meta')
+      assert_equal page, response_meta['current_page']
+      assert_equal page+1, response_meta['next_page']
+      assert_equal page-1, response_meta['prev_page']
     end
   end
 

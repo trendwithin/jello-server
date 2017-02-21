@@ -2,7 +2,7 @@ admin:
   email: admin@example.com
   password_digest: <%= BCrypt::Password.create('secret') %>
 
-<% 5.times do |i| %>
+<% 10.times do |i| %>
 user<%= i %>:
   email: user<%= i %>@example.com
   password_digest: <%= BCrypt::Password.create('secret') %>
