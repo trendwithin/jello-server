@@ -1,4 +1,4 @@
-class V2::CommentsController < ApplicationController
+class V2::CommentsController < V2::BaseController
   before_action :set_comment, only: [:show, :update, :destroy]
 
   # GET /v2/comments

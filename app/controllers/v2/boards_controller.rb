@@ -1,4 +1,4 @@
-class V2::BoardsController < ApplicationController
+class V2::BoardsController < V2::BaseController
   before_action :set_user, only: [:index]
   before_action :set_board, only: [:show, :update, :destroy]
 

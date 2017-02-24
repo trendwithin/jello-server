@@ -1,4 +1,4 @@
-class V2::UsersController < ApplicationController
+class V2::UsersController < V2::BaseController
   before_action :set_user, only: [:show, :update, :destroy]
 
   # GET /v2/users

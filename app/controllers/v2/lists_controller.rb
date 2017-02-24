@@ -1,4 +1,4 @@
-class V2::ListsController < ApplicationController
+class V2::ListsController < V2::BaseController
   before_action :set_list, only: [:show, :update, :destroy]
 
   # GET /v2/lists
