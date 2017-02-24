@@ -57,6 +57,13 @@ describe V2::UsersController do
             headers: authorization_headers(username: 'NoSuch', password: 'FAIL'),
             as: :json
         assert_response :unauthorized
+
+        response_error = json_response['error']
+        refute_nil response_error
+
+        assert_equal 401, response_error['status']
+        assert_equal 'Unauthorized', response_error['name']
+        assert_equal 'HTTP Basic: Access denied.', response_error['message']
       end
     end
   end
