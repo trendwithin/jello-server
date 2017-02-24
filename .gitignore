@@ -39,7 +39,7 @@
 
 # Dotenv files
 #
-/.env
+/.env*
 
 
 # Documentation
