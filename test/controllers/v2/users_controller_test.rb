@@ -11,7 +11,7 @@ describe V2::UsersController do
       page = 1
       User.stub(:default_per_page, @per_page) do
         @expected_users = User.page(page)
-        get v2_users_url, as: :json
+        get v2_users_url, headers: authorization_headers, as: :json
       end
 
       assert_response :ok
@@ -38,7 +38,7 @@ describe V2::UsersController do
       page = 3
       User.stub(:default_per_page, @per_page) do
         @expected_users = User.page(page)
-        get v2_users_url(page: page), as: :json
+        get v2_users_url(page: page), headers: authorization_headers, as: :json
       end
 
       response_users = json_response['users']
@@ -50,11 +50,20 @@ describe V2::UsersController do
       assert_equal page+1, response_meta['next_page']
       assert_equal page-1, response_meta['prev_page']
     end
+
+    describe 'when passed incorrect credentials' do
+      it 'should respond with :unauthorized' do
+        get v2_users_url,
+            headers: authorization_headers(username: 'NoSuch', password: 'FAIL'),
+            as: :json
+        assert_response :unauthorized
+      end
+    end
   end
 
   describe 'GET /v2/users/:id' do
     it 'should successfully fetch the requested User' do
-      get v2_user_url(@user), as: :json
+      get v2_user_url(@user), headers: authorization_headers, as: :json
       assert_response :ok
 
       response_user = json_response['user']
@@ -76,7 +85,7 @@ describe V2::UsersController do
 
     describe 'when :id is unknown' do
       it 'should respond with :not_found' do
-        get v2_user_url(id: 'jim'), as: :json
+        get v2_user_url(id: 'jim'), headers: authorization_headers, as: :json
         assert_response :not_found
 
         response_error = json_response['error']
@@ -98,7 +107,10 @@ describe V2::UsersController do
       }
 
       assert_difference('User.count') do
-        post v2_users_url, params: { user: user_attributes }, as: :json
+        post v2_users_url,
+             params: { user: user_attributes },
+             headers: authorization_headers,
+             as: :json
       end
 
       assert_response :created
@@ -119,7 +131,10 @@ describe V2::UsersController do
         user_attributes = { email: '' }
 
         assert_no_difference('User.count') do
-          post v2_users_url, params: { user: user_attributes }, as: :json
+          post v2_users_url,
+               params: { user: user_attributes },
+               headers: authorization_headers,
+               as: :json
         end
 
         assert_response :unprocessable_entity
@@ -144,7 +159,10 @@ describe V2::UsersController do
       update_time = 1.day.from_now.change(usec: 0)  # truncate milliseconds
       travel_to update_time
 
-      patch v2_user_url(@user), params: { user: user_attributes }, as: :json
+      patch v2_user_url(@user),
+            params: { user: user_attributes },
+            headers: authorization_headers,
+            as: :json
       assert_response :ok
 
       response_user = json_response['user']
@@ -158,7 +176,10 @@ describe V2::UsersController do
       it 'should respond with :not_found' do
         user_attributes = { email: 'jim@example.com' }
 
-        patch v2_user_url(id: 'jim'), params: { user: user_attributes }, as: :json
+        patch v2_user_url(id: 'jim'),
+              params: { user: user_attributes },
+              headers: authorization_headers,
+              as: :json
         assert_response :not_found
 
         response_error = json_response['error']
@@ -174,7 +195,10 @@ describe V2::UsersController do
       it 'should respond with validation errors' do
         user_attributes = { email: '' }
 
-        patch v2_user_url(@user), params: { user: user_attributes }, as: :json
+        patch v2_user_url(@user),
+              params: { user: user_attributes },
+              headers: authorization_headers,
+              as: :json
         assert_response :unprocessable_entity
 
         response_error = json_response['error']
@@ -192,7 +216,7 @@ describe V2::UsersController do
   describe 'DELETE /v2/users/:id' do
     it 'should successfully delete the requested User' do
       assert_difference('User.count', -1) do
-        delete v2_user_url(@user), as: :json
+        delete v2_user_url(@user), headers: authorization_headers, as: :json
       end
 
       assert_response :no_content
@@ -202,7 +226,7 @@ describe V2::UsersController do
     describe 'when :id is unknown' do
       it 'should respond with :not_found' do
         assert_no_difference('User.count') do
-          delete v2_user_url(id: 'jim'), as: :json
+          delete v2_user_url(id: 'jim'), headers: authorization_headers, as: :json
         end
 
         assert_response :not_found

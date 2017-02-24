@@ -13,31 +13,37 @@ class V2::CommentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get index" do
-    get v2_comments_url, as: :json
+    get v2_comments_url, headers: authorization_headers, as: :json
     assert_response :success
   end
 
   test "should create comment" do
     assert_difference('Comment.count') do
-      post v2_comments_url, params: { comment: @comment_attributes }, as: :json
+      post v2_comments_url,
+           params: { comment: @comment_attributes },
+           headers: authorization_headers,
+           as: :json
     end
 
     assert_response 201
   end
 
   test "should show comment" do
-    get v2_comment_url(@comment), as: :json
+    get v2_comment_url(@comment), headers: authorization_headers, as: :json
     assert_response :success
   end
 
   test "should update comment" do
-    patch v2_comment_url(@comment), params: { comment: @comment_attributes }, as: :json
+    patch v2_comment_url(@comment),
+          params: { comment: @comment_attributes },
+          headers: authorization_headers,
+          as: :json
     assert_response 200
   end
 
   test "should destroy comment" do
     assert_difference('Comment.count', -1) do
-      delete v2_comment_url(@comment), as: :json
+      delete v2_comment_url(@comment), headers: authorization_headers, as: :json
     end
 
     assert_response 204

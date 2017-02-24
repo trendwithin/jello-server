@@ -3,6 +3,7 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'minitest/rails'
 
+require 'support/authentication_helpers'
 require 'support/json_service_helpers'
 
 class ActiveSupport::TestCase
@@ -13,5 +14,6 @@ class ActiveSupport::TestCase
 end
 
 class ActionDispatch::IntegrationTest
+  include AuthenticationHelpers
   include JSONServiceHelpers
 end
