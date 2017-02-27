@@ -12,31 +12,43 @@ class V2::BoardsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get index" do
-    get v2_boards_url, as: :json
+    get v2_boards_url,
+        headers: authorization_headers(user: @user),
+        as: :json
     assert_response :success
   end
 
   test "should create board" do
     assert_difference('Board.count') do
-      post v2_boards_url, params: { board: @board_attributes }, as: :json
+      post v2_boards_url,
+           params: { board: @board_attributes },
+           headers: authorization_headers(user: @user),
+           as: :json
     end
 
     assert_response 201
   end
 
   test "should show board" do
-    get v2_board_url(@board), as: :json
+    get v2_board_url(@board),
+        headers: authorization_headers(user: @user),
+        as: :json
     assert_response :success
   end
 
   test "should update board" do
-    patch v2_board_url(@board), params: { board: @board_attributes }, as: :json
+    patch v2_board_url(@board),
+          params: { board: @board_attributes },
+          headers: authorization_headers(user: @user),
+          as: :json
     assert_response 200
   end
 
   test "should destroy board" do
     assert_difference('Board.count', -1) do
-      delete v2_board_url(@board), as: :json
+      delete v2_board_url(@board),
+             headers: authorization_headers(user: @user),
+             as: :json
     end
 
     assert_response 204

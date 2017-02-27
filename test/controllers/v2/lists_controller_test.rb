@@ -14,31 +14,43 @@ class V2::ListsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get index" do
-    get v2_lists_url, as: :json
+    get v2_lists_url,
+        headers: authorization_headers(user: @user),
+        as: :json
     assert_response :success
   end
 
   test "should create list" do
     assert_difference('List.count') do
-      post v2_lists_url, params: { list: @list_attributes }, as: :json
+      post v2_lists_url,
+           params: { list: @list_attributes },
+           headers: authorization_headers(user: @user),
+           as: :json
     end
 
     assert_response 201
   end
 
   test "should show list" do
-    get v2_list_url(@list), as: :json
+    get v2_list_url(@list),
+        headers: authorization_headers(user: @user),
+        as: :json
     assert_response :success
   end
 
   test "should update list" do
-    patch v2_list_url(@list), params: { list: @list_attributes }, as: :json
+    patch v2_list_url(@list),
+          params: { list: @list_attributes },
+          headers: authorization_headers(user: @user),
+          as: :json
     assert_response 200
   end
 
   test "should destroy list" do
     assert_difference('List.count', -1) do
-      delete v2_list_url(@list), as: :json
+      delete v2_list_url(@list),
+             headers: authorization_headers(user: @user),
+             as: :json
     end
 
     assert_response 204
